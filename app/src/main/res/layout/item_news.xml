@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:Tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="10dp"
+    Tools:style="@style/CardView">
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/iv_news_image"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_favorite_gray_24dp" />
+
+        <TextView
+            android:id="@+id/tv_news_source"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:padding="@dimen/padding_small"
+            android:textColor="@color/colorBlack"
+            android:textSize="@dimen/text_medium"
+            Tools:text="Yahoo News Video"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/iv_news_image" />
+
+        <TextView
+            android:id="@+id/tv_news_hours"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/padding_small"
+            android:textSize="16sp"
+            Tools:text="18h"
+            app:layout_constraintStart_toEndOf="@id/tv_news_source"
+            app:layout_constraintTop_toTopOf="@+id/tv_news_source" />
+
+        <ImageButton
+            android:id="@+id/iv_news_more_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/padding_small"
+            android:background="?android:attr/selectableItemBackground"
+            android:src="@drawable/ic_more_vert_gray_24dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/tv_news_source" />
+
+        <TextView
+            android:id="@+id/tv_new_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/margin_medium"
+            android:layout_marginStart="@dimen/margin_medium"
+            android:layout_marginTop="@dimen/margin_small"
+            android:textColor="@color/colorBlack"
+            android:textSize="@dimen/text_large"
+            android:textStyle="bold"
+            Tools:text="this is a title for news"
+            app:layout_constraintTop_toBottomOf="@+id/tv_news_source" />
+
+        <TextView
+            android:id="@+id/tv_news_reactions"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_small"
+            android:padding="@dimen/padding_small"
+            android:textSize="@dimen/text_medium"
+            Tools:text="117 reactions"
+            app:layout_constraintStart_toStartOf="@id/tv_new_title"
+            app:layout_constraintTop_toBottomOf="@+id/tv_new_title" />
+
+        <ImageButton
+            android:id="@+id/ib_news_favorite"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/padding_small"
+            android:src="@drawable/ic_favorite_gray_24dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:background="?android:attr/selectableItemBackground"
+            app:layout_constraintTop_toTopOf="@id/tv_news_reactions" />
+
+        <ImageButton
+            android:id="@+id/ib_news_message"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/padding_small"
+            android:src="@drawable/ic_message_gray_24dp"
+            android:background="?android:attr/selectableItemBackground"
+            app:layout_constraintEnd_toStartOf="@id/ib_news_favorite"
+            app:layout_constraintTop_toTopOf="@id/tv_news_reactions" />
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="?android:attr/selectableItemBackground"
+            android:padding="@dimen/padding_small"
+            android:src="@drawable/ic_share_gray_24dp"
+            app:layout_constraintEnd_toStartOf="@id/ib_news_message"
+            app:layout_constraintTop_toTopOf="@id/tv_news_reactions" />
+
+    </android.support.constraint.ConstraintLayout>
+
+</android.support.v7.widget.CardView>
