@@ -11,9 +11,9 @@ import retrofit2.http.Query;
  */
 
 public interface NewsListsService {
-    @GET("/top-headlines")
+    @GET("v2/top-headlines")
     Observable<NewsListsResponse> getNewsList(@Query("country") String country,
                                                @Query("apiKey") String apiKey,
                                                @Query("page") int page,
-                                               @Query("pagesize") int pagesize);
+                                               @Query("pageSize") int pagesize);
 }

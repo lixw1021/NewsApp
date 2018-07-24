@@ -20,10 +20,15 @@ public class NewsListsInteractor {
     private CompositeDisposable compositeDisposable;
     private OnNewsListCallback newsListCallback;
 
+    public NewsListsInteractor() {
+        compositeDisposable = new CompositeDisposable();
+    }
+
     public void setNewsListCallback(OnNewsListCallback callback) {
         newsListCallback = callback;
     }
-    private void getNewsList(){
+
+    public void getNewsList(){
         Observable<NewsListsResponse> getNewsListAPi =
                 NetworkUtil
                         .getRetrofit()
