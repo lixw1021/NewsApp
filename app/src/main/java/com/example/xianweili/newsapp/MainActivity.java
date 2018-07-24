@@ -1,5 +1,6 @@
 package com.example.xianweili.newsapp;
 
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -14,6 +15,7 @@ import butterknife.ButterKnife;
 public class MainActivity extends AppCompatActivity implements
         NewsListsInteractor.OnNewsListCallback {
     @BindView(R.id.rv_news) RecyclerView recyclerView;
+    @BindView(R.id.srl_news_refresh) SwipeRefreshLayout refreshLayout;
 
     private NewsAdapter newsAdapter;
     private NewsListsInteractor interactor;
@@ -26,6 +28,16 @@ public class MainActivity extends AppCompatActivity implements
 
         initialRecyclerView();
         initialInteractor();
+        initialSwipeRefreshLayout();
+    }
+
+    private void initialSwipeRefreshLayout() {
+        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                interactor.getNewsList();
+            }
+        });
     }
 
     private void initialInteractor() {
@@ -42,6 +54,7 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void onNewsListReceived(NewsListsResponse newsListsResponse) {
+        refreshLayout.setRefreshing(false);
         Log.i("xianwei", newsListsResponse.getStatus());
         Log.i("xianwei", String.valueOf(newsListsResponse.getArticles().size()));
         newsAdapter.swapDate(newsListsResponse.getArticles());
