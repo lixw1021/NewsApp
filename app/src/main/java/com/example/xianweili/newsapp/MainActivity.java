@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.example.xianweili.newsapp.data.model.responsemodel.NewsListsResponse;
 
@@ -13,7 +14,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity implements
-        NewsListsInteractor.OnNewsListCallback {
+        NewsListsInteractor.OnNewsListCallback,
+        NewsAdapter.OnClickListenerCallback {
     @BindView(R.id.rv_news) RecyclerView recyclerView;
     @BindView(R.id.srl_news_refresh) SwipeRefreshLayout refreshLayout;
 
@@ -29,6 +31,7 @@ public class MainActivity extends AppCompatActivity implements
         initialRecyclerView();
         initialInteractor();
         initialSwipeRefreshLayout();
+        newsAdapter.setCallback(this);
     }
 
     private void initialSwipeRefreshLayout() {
@@ -70,4 +73,29 @@ public class MainActivity extends AppCompatActivity implements
         super.onDestroy();
         interactor.destroyResource();
     }
+
+    // adapter callbacks////////////////////////////////////////////////////////////////////////////
+    @Override
+    public void onNewsClicked() {
+        Toast.makeText(this, "News Clicked", Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void onShareClicked() {
+        Toast.makeText(this, "Share Button Clicked", Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void onMessageClicked() {
+        Toast.makeText(this, "Message Button Clicked", Toast.LENGTH_LONG).show();
+
+    }
+
+    @Override
+    public void onFavoriteClicked() {
+        Toast.makeText(this, "Favorite Button Clicked", Toast.LENGTH_LONG).show();
+
+    }
+    // adapter callbacks end////////////////////////////////////////////////////////////////////////
+
 }

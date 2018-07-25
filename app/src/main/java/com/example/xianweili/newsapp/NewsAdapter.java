@@ -18,6 +18,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * Created by xianweili on 7/24/18.
@@ -26,10 +27,15 @@ import butterknife.ButterKnife;
 public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsListViewHolder> {
     private Context context;
     private List<Article> newsList;
+    private OnClickListenerCallback callback;
 
     public NewsAdapter(Context context) {
         this.context = context;
         newsList = new ArrayList<>();
+    }
+
+    public void setCallback(OnClickListenerCallback callback) {
+        this.callback = callback;
     }
 
     @NonNull
@@ -77,6 +83,38 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsListViewHo
         public NewsListViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    callback.onNewsClicked();
+                }
+            });
         }
+
+        @OnClick(R.id.ib_news_share)
+        void shareNews(){
+            callback.onShareClicked();
+        }
+
+        @OnClick(R.id.ib_news_message)
+        void messageNews() {
+            callback.onMessageClicked();
+        }
+
+        @OnClick(R.id.ib_news_favorite)
+        void saveFavoriteNews() {
+            callback.onFavoriteClicked();
+        }
+    }
+
+    public interface OnClickListenerCallback{
+        void onNewsClicked();
+
+        void onShareClicked();
+
+        void onMessageClicked();
+
+        void onFavoriteClicked();
     }
 }
