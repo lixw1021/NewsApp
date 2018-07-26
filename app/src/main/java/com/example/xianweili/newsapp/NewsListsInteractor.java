@@ -28,15 +28,15 @@ public class NewsListsInteractor {
         newsListCallback = callback;
     }
 
-    public void getNewsList(){
+    public void getNewsList(int page){
         Observable<NewsListsResponse> getNewsListAPi =
                 NetworkUtil
                         .getRetrofit()
                         .create(NewsListsService.class)
                         .getNewsList("us",
                                 "84cce694de214d928bf162917492d2c0",
-                                1,
-                                3);
+                                page,
+                                5);
 
         compositeDisposable.add(getNewsListAPi.subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())

@@ -64,8 +64,13 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsListViewHo
     }
 
     public void swapDate(List<Article> articles) {
-        newsList.clear();
+//        newsList.clear();
         newsList.addAll(articles);
+        notifyDataSetChanged();
+    }
+
+    public void cleanData() {
+        newsList.clear();
         notifyDataSetChanged();
     }
 

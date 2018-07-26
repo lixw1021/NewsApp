@@ -21,24 +21,67 @@ public class MainActivity extends AppCompatActivity implements
 
     private NewsAdapter newsAdapter;
     private NewsListsInteractor interactor;
+    private int curPage = 1;
+    private EndlessRecyclerViewScrollListener scrollListener;
+    private boolean mIsLoading = false;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
 
-        initialRecyclerView();
+        initialRecyclerView(linearLayoutManager);
         initialInteractor();
-        initialSwipeRefreshLayout();
         newsAdapter.setCallback(this);
+//        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+//            @Override
+//            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+//                super.onScrollStateChanged(recyclerView, newState);
+//                if (!recyclerView.canScrollVertically(1)) {
+//                    interactor.getNewsList(curPage);
+//                }
+//            }
+//        });
+
+//        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+//        scrollListener = new EndlessRecyclerViewScrollListener(linearLayoutManager) {
+//            @Override
+//            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
+//                interactor.getNewsList(page);
+//            }
+//        };
+//        recyclerView.addOnScrollListener(scrollListener);
+
+        RecyclerView.OnScrollListener mScrollListener = new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                if (mIsLoading) return;
+
+                int visibleItemCount = linearLayoutManager.getChildCount();
+                int totalItemCount = linearLayoutManager.getItemCount();
+                int pastVisibleItems = linearLayoutManager.findFirstVisibleItemPosition();
+                if (pastVisibleItems + visibleItemCount >= totalItemCount) {
+                    interactor.getNewsList(curPage);
+                    mIsLoading = true;
+                }
+            }
+        };
+
+        recyclerView.addOnScrollListener(mScrollListener);
+
+        initialSwipeRefreshLayout();
     }
 
     private void initialSwipeRefreshLayout() {
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                interactor.getNewsList();
+                newsAdapter.cleanData();
+                curPage = 1;
+                interactor.getNewsList(curPage);
             }
         });
     }
@@ -46,21 +89,25 @@ public class MainActivity extends AppCompatActivity implements
     private void initialInteractor() {
         interactor = new NewsListsInteractor();
         interactor.setNewsListCallback(this);
-        interactor.getNewsList();
+        curPage = 1;
+        interactor.getNewsList(curPage);
     }
 
-    private void initialRecyclerView() {
+    private void initialRecyclerView(LinearLayoutManager linearLayoutManager) {
         newsAdapter = new NewsAdapter(this);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(newsAdapter);
     }
 
     @Override
     public void onNewsListReceived(NewsListsResponse newsListsResponse) {
         refreshLayout.setRefreshing(false);
-        Log.i("xianwei", newsListsResponse.getStatus());
-        Log.i("xianwei", String.valueOf(newsListsResponse.getArticles().size()));
-        newsAdapter.swapDate(newsListsResponse.getArticles());
+        if (newsListsResponse.getStatus().equals("ok") && newsListsResponse.getArticles().size() > 0) {
+            newsAdapter.swapDate(newsListsResponse.getArticles());
+            Log.i("xianwei", "curPage" + curPage);
+            curPage++;
+            mIsLoading = false;
+        }
     }
 
     @Override
