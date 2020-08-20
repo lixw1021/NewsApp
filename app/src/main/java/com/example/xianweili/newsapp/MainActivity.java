@@ -5,10 +5,16 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.widget.Toast;
 
 import com.example.xianweili.newsapp.data.model.responsemodel.NewsListsResponse;
+
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.PriorityQueue;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -18,6 +24,7 @@ public class MainActivity extends AppCompatActivity implements
         NewsAdapter.OnClickListenerCallback {
     @BindView(R.id.rv_news) RecyclerView recyclerView;
     @BindView(R.id.srl_news_refresh) SwipeRefreshLayout refreshLayout;
+    @BindView(R.id.my_toolbar) Toolbar toolbar;
 
     private NewsAdapter newsAdapter;
     private NewsListsInteractor interactor;
