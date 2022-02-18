@@ -27,7 +27,6 @@ public class MainActivity extends AppCompatActivity implements
     private EndlessRecyclerViewScrollListener scrollListener;
     private boolean mIsLoading = false;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
