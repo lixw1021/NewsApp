@@ -3,23 +3,25 @@ package com.example.xianweili.newsapp
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.xianweili.newsapp.NewsAdapter.OnClickListenerCallback
-import com.example.xianweili.newsapp.NewsListsInteractor.OnNewsListCallback
 import com.example.xianweili.newsapp.data.model.responsemodel.NewsListsResponse
 import com.example.xianweili.newsapp.databinding.ActivityMainBinding
+import com.example.xianweili.newsapp.presentation.MainViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
-class MainActivity : AppCompatActivity(), OnNewsListCallback, OnClickListenerCallback {
+@AndroidEntryPoint
+class MainActivity : AppCompatActivity(), OnClickListenerCallback {
 
     private lateinit var binding: ActivityMainBinding
-    var toolbar: Toolbar? = null
+    private val viewModel: MainViewModel by viewModels()
+
     private var newsAdapter: NewsAdapter? = null
-    private var interactor: NewsListsInteractor? = null
     private var curPage = 1
-    private val scrollListener: EndlessRecyclerViewScrollListener? = null
     private var mIsLoading = false
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,26 +29,7 @@ class MainActivity : AppCompatActivity(), OnNewsListCallback, OnClickListenerCal
         setContentView(binding.root)
         val linearLayoutManager = LinearLayoutManager(this)
         initialRecyclerView(linearLayoutManager)
-        initialInteractor()
         newsAdapter!!.setCallback(this)
-        //        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-//            @Override
-//            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-//                super.onScrollStateChanged(recyclerView, newState);
-//                if (!recyclerView.canScrollVertically(1)) {
-//                    interactor.getNewsList(curPage);
-//                }
-//            }
-//        });
-
-//        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
-//        scrollListener = new EndlessRecyclerViewScrollListener(linearLayoutManager) {
-//            @Override
-//            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
-//                interactor.getNewsList(page);
-//            }
-//        };
-//        recyclerView.addOnScrollListener(scrollListener);
         val mScrollListener: RecyclerView.OnScrollListener =
             object : RecyclerView.OnScrollListener() {
                 override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
@@ -55,28 +38,27 @@ class MainActivity : AppCompatActivity(), OnNewsListCallback, OnClickListenerCal
                     val totalItemCount = linearLayoutManager.itemCount
                     val pastVisibleItems = linearLayoutManager.findFirstVisibleItemPosition()
                     if (pastVisibleItems + visibleItemCount >= totalItemCount) {
-                        interactor!!.getNewsList(curPage)
+                        viewModel.loadNextPage()
                         mIsLoading = true
                     }
                 }
             }
         binding.rvNews.addOnScrollListener(mScrollListener)
         initialSwipeRefreshLayout()
+        observeData()
+    }
+
+    private fun observeData() {
+        viewModel.state.observe(this) {
+            onNewsListReceived(it.newsListsResponse!!)
+        }
     }
 
     private fun initialSwipeRefreshLayout() {
         binding.srlNewsRefresh.setOnRefreshListener {
             newsAdapter!!.cleanData()
-            curPage = 1
-            interactor!!.getNewsList(curPage)
+            viewModel.loadData()
         }
-    }
-
-    private fun initialInteractor() {
-        interactor = NewsListsInteractor()
-        interactor!!.setNewsListCallback(this)
-        curPage = 1
-        interactor!!.getNewsList(curPage)
     }
 
     private fun initialRecyclerView(linearLayoutManager: LinearLayoutManager) {
@@ -88,24 +70,19 @@ class MainActivity : AppCompatActivity(), OnNewsListCallback, OnClickListenerCal
 
     }
 
-    override fun onNewsListReceived(newsListsResponse: NewsListsResponse) {
+    fun onNewsListReceived(newsListsResponse: NewsListsResponse) {
         binding.srlNewsRefresh.isRefreshing = false
         if (newsListsResponse.status == "ok" && newsListsResponse.articles.size > 0) {
             newsAdapter!!.swapDate(newsListsResponse.articles)
             Log.i("xianwei", "curPage$curPage")
-            curPage++
             mIsLoading = false
         }
     }
 
-    override fun onNewsListError(errorMessage: String) {
+    fun onNewsListError(errorMessage: String) {
         Log.i("xianwei", errorMessage)
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        interactor!!.destroyResource()
-    }
 
     // adapter callbacks////////////////////////////////////////////////////////////////////////////
     override fun onNewsClicked() {

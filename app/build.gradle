@@ -1,5 +1,9 @@
-apply plugin: 'com.android.application'
-apply plugin: 'kotlin-android'
+plugins {
+    id 'com.android.application'
+    id 'kotlin-android'
+    id 'kotlin-kapt'
+    id 'dagger.hilt.android.plugin'
+}
 
 // Dependency versions
 def googleConglomerate = '1.0.0'
@@ -39,6 +43,9 @@ dependencies {
     implementation 'androidx.recyclerview:recyclerview:' + googleConglomerate
     implementation 'androidx.constraintlayout:constraintlayout:2.1.3'
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0"
+    implementation "androidx.activity:activity-ktx:1.4.0"
+    implementation "androidx.fragment:fragment-ktx:1.4.1"
+
     testImplementation 'junit:junit:4.13.2'
 
     //Architecture Components
@@ -62,4 +69,8 @@ dependencies {
     //Kotlin
     implementation 'androidx.core:core-ktx:1.7.0'
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+
+    // Hilt
+    implementation "com.google.dagger:hilt-android:$hilt_version"
+    kapt "com.google.dagger:hilt-android-compiler:$hilt_version"
 }

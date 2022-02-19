@@ -5,6 +5,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 
 object NetworkUtil {
+
     @JvmStatic
     val retrofit: Retrofit
         get() = Retrofit.Builder()

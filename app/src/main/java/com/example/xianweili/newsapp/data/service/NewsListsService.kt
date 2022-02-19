@@ -11,6 +11,6 @@ interface NewsListsService {
         @Query("country") country: String?,
         @Query("apiKey") apiKey: String?,
         @Query("page") page: Int,
-        @Query("pageSize") pagesize: Int
-    ): Observable<NewsListsResponse?>?
+        @Query("pageSize") pageSize: Int
+    ): Observable<NewsListsResponse>
 }
